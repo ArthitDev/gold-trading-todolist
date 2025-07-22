@@ -37,22 +37,22 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-950 p-4 text-white sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl rounded-xl bg-gray-900 p-6 shadow-2xl md:p-8 lg:p-10">
-        <h2 className="mb-6 text-center text-3xl font-extrabold tracking-tight text-yellow-400 sm:text-4xl flex items-center justify-center gap-3">
+    <main className="min-h-screen bg-gray-950 p-2 sm:p-4 lg:p-8 text-white">
+      <div className="mx-auto max-w-7xl rounded-xl bg-gray-900 p-4 sm:p-6 md:p-8 lg:p-10 shadow-2xl">
+        <h2 className="mb-6 text-center text-lg sm:text-2xl lg:text-xl xl:text-xl font-extrabold tracking-tight text-yellow-400 flex items-center justify-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-3xl">📊</span>
+            <span className="text-2xl sm:text-3xl">📊</span>
           </div>
-          ระบบวิเคราะห์พฤติกรรมการเทรดทอง
+          <span className="leading-tight">ระบบวิเคราะห์พฤติกรรมการเทรดทอง</span>
         </h2>
         
         {/* คำอธิบายการคำนวณ */}
         <div className="mb-8 rounded-lg bg-blue-900/20 border border-blue-500/30 p-4">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-blue-400">ℹ️</span>
-            <h3 className="text-lg font-semibold text-blue-400">การคำนวณการเทรดทองคำ</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-blue-400">การคำนวณการเทรดทองคำ</h3>
           </div>
-          <div className="text-sm text-gray-300 space-y-1">
+          <div className="text-xs sm:text-sm text-gray-300 space-y-1">
             <p>• <strong>1 Lot</strong> = 100 ออนซ์ทองคำ</p>
             <p>• <strong>การคำนวณกำไร/ขาดทุน</strong> = (ราคาออก - ราคาเข้า) × จำนวน Lot × 100 ออนซ์</p>
             <p>• <strong>ราคา</strong> แสดงเป็น USD ต่อออนซ์</p>
@@ -60,30 +60,30 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6 lg:gap-8">
           <CapitalInput
             initialCapital={baseCapital}
             onUpdateCapital={updateCapital}
           />
 
           {/* สรุปผลรวมแบบละเอียด */}
-          <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-white">สรุปผลรวม</h2>
+          <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-white">สรุปผลรวม</h2>
               {trades.length > 0 && (
                 <button
                   onClick={clearAllTrades}
-                  className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75"
+                  className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 w-full sm:w-auto"
                 >
                   ลบข้อมูลทั้งหมด
                 </button>
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="bg-gray-700 rounded-lg p-4">
                 <p className="text-sm text-gray-400">เงินทุนเริ่มต้น</p>
-                <p className="text-xl font-bold text-yellow-400">
+                <p className="text-lg sm:text-xl font-bold text-yellow-400">
                   {formatCurrency(baseCapital)}
                 </p>
               </div>
@@ -91,7 +91,7 @@ export default function Home() {
               <div className="bg-gray-700 rounded-lg p-4">
                 <p className="text-sm text-gray-400">กำไร/ขาดทุนรวม</p>
                 <p
-                  className={`text-xl font-bold ${
+                  className={`text-lg sm:text-xl font-bold ${
                     statistics.totalPnl >= 0 ? "text-green-400" : "text-red-400"
                   }`}
                 >
@@ -101,28 +101,28 @@ export default function Home() {
 
               <div className="bg-gray-700 rounded-lg p-4">
                 <p className="text-sm text-gray-400">เงินทุนสุทธิ</p>
-                <p className="text-xl font-bold text-yellow-400">
+                <p className="text-lg sm:text-xl font-bold text-yellow-400">
                   {formatCurrency(totalCapital)}
                 </p>
               </div>
 
               <div className="bg-gray-700 rounded-lg p-4">
                 <p className="text-sm text-gray-400">จำนวนการเทรดทั้งหมด</p>
-                <p className="text-xl font-bold text-blue-400">
+                <p className="text-lg sm:text-xl font-bold text-blue-400">
                   {statistics.totalTrades}
                 </p>
               </div>
 
               <div className="bg-gray-700 rounded-lg p-4">
                 <p className="text-sm text-gray-400">การเทรดที่ได้กำไร</p>
-                <p className="text-xl font-bold text-green-400">
+                <p className="text-lg sm:text-xl font-bold text-green-400">
                   {statistics.winningTrades}
                 </p>
               </div>
 
               <div className="bg-gray-700 rounded-lg p-4">
                 <p className="text-sm text-gray-400">อัตราชนะ</p>
-                <p className="text-xl font-bold text-purple-400">
+                <p className="text-lg sm:text-xl font-bold text-purple-400">
                   {statistics.winRate.toFixed(1)}%
                 </p>
               </div>
@@ -140,7 +140,7 @@ export default function Home() {
           <TradeForm onAddTrade={addTrade} />
 
           {/* กราฟต่างๆ */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
             <SummaryChart trades={trades} />
             <CumulativeChart trades={trades} />
           </div>

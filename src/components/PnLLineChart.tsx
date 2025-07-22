@@ -111,92 +111,94 @@ export default function PnLLineChart({ trades }: PnLLineChartProps) {
 
   if (trades.length === 0) {
     return (
-      <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-        <h2 className="mb-6 text-2xl font-bold text-white">กราฟกำไรขาดทุนต่อเนื่อง</h2>
-        <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <div className="text-6xl mb-4">📈</div>
-            <p className="text-gray-400 text-lg">ยังไม่มีข้อมูลการเทรด</p>
-            <p className="text-gray-500 text-sm mt-2">เพิ่มการเทรดเพื่อดูกราฟแนวโน้ม</p>
-          </div>
+      <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+        <h2 className="mb-4 text-lg sm:text-2xl font-bold text-white">แนวโน้มกำไร/ขาดทุนต่อเนื่อง</h2>
+        <div className="flex items-center justify-center h-64 text-gray-400">
+          <p className="text-center">
+            <span className="text-4xl block mb-2">📈</span>
+            ยังไม่มีข้อมูลการเทรดสำหรับแสดงกราฟ
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white mb-4 sm:mb-0">กราฟกำไรขาดทุนต่อเนื่อง</h2>
-        
+    <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+        <h2 className="text-lg sm:text-2xl font-bold text-white">แนวโน้มกำไร/ขาดทุนต่อเนื่อง</h2>
         {stats && (
-          <div className="flex flex-wrap gap-2 text-sm">
-            <span className={`px-3 py-1 rounded-full ${stats.finalPnL >= 0 ? 'bg-green-600' : 'bg-red-600'}`}>
+          <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
+            <span className={`px-2 py-1 rounded ${stats.finalPnL >= 0 ? 'bg-green-600' : 'bg-red-600'} text-white`}>
               รวม: {formatPnL(stats.finalPnL)}
             </span>
-            <span className="px-3 py-1 rounded-full bg-blue-600">
+            <span className="px-2 py-1 rounded bg-blue-600 text-white">
               WR: {stats.winRate.toFixed(1)}%
             </span>
-            <span className="px-3 py-1 rounded-full bg-purple-600">
-              DD: ${formatAmount(stats.maxDrawdown)}
+            <span className="px-2 py-1 rounded bg-purple-600 text-white">
+              DD: ${stats.maxDrawdown.toFixed(0)}
             </span>
           </div>
         )}
       </div>
 
-      {/* สถิติรวม */}
+      {/* สถิติสำคัญ */}
       {stats && (
-        <div className="mb-6 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-sm">
+        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
           <div className="bg-gray-700 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-blue-400">{stats.totalTrades}</div>
-            <div className="text-gray-400">การเทรด</div>
+            <div className="text-lg sm:text-xl font-bold text-blue-400">{stats.totalTrades}</div>
+            <div className="text-gray-400 text-xs">การเทรดทั้งหมด</div>
           </div>
           <div className="bg-gray-700 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-green-400">{stats.profitTrades}</div>
-            <div className="text-gray-400">กำไร</div>
+            <div className="text-lg sm:text-xl font-bold text-green-400">{stats.profitTrades}</div>
+            <div className="text-gray-400 text-xs">กำไร</div>
           </div>
           <div className="bg-gray-700 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-red-400">{stats.lossTrades}</div>
-            <div className="text-gray-400">ขาดทุน</div>
+            <div className="text-lg sm:text-xl font-bold text-red-400">{stats.lossTrades}</div>
+            <div className="text-gray-400 text-xs">ขาดทุน</div>
           </div>
           <div className="bg-gray-700 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-yellow-400">{stats.winRate.toFixed(1)}%</div>
-            <div className="text-gray-400">อัตราชนะ</div>
-          </div>
-          <div className="bg-gray-700 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-green-400">+${formatAmount(stats.maxProfit)}</div>
-            <div className="text-gray-400">กำไรสูงสุด</div>
-          </div>
-          <div className="bg-gray-700 rounded-lg p-3 text-center">
-            <div className="text-lg font-bold text-red-400">${formatAmount(Math.abs(stats.maxLoss))}</div>
-            <div className="text-gray-400">ขาดทุนสูงสุด</div>
+            <div className="text-lg sm:text-xl font-bold text-yellow-400">{stats.winRate.toFixed(1)}%</div>
+            <div className="text-gray-400 text-xs">อัตราชนะ</div>
           </div>
         </div>
       )}
 
-      {/* กราฟหลัก */}
-      <div className="bg-gray-900 rounded-lg p-4">
-        <ResponsiveContainer width="100%" height={500}>
-          <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+      {/* กราฟ */}
+      <div className="bg-gray-900 rounded-lg p-2 sm:p-4">
+        <ResponsiveContainer width="100%" height={300} className="sm:!h-[400px] lg:!h-[500px]">
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 10,
+              right: 15,
+              left: 15,
+              bottom: 10,
+            }}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis 
               dataKey="tradeNumber" 
               stroke="#9CA3AF"
-              tick={{ fontSize: 12 }}
-              label={{ value: 'ลำดับการเทรด', position: 'insideBottom', offset: -40, style: { textAnchor: 'middle', fill: '#9CA3AF' } }}
+              fontSize={10}
+              tick={{ fontSize: 9 }}
+              label={{ value: 'การเทรดที่', position: 'insideBottom', offset: -5, style: { textAnchor: 'middle', fontSize: '10px', fill: '#9CA3AF' } }}
+              className="sm:text-xs"
             />
             <YAxis 
               stroke="#9CA3AF"
-              tick={{ fontSize: 12 }}
-              tickFormatter={(value) => `${value >= 0 ? '+' : ''}$${formatAmount(Math.abs(value))}`}
-              label={{ value: 'กำไร/ขาดทุน (USD)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#9CA3AF' } }}
+              fontSize={10}
+              tick={{ fontSize: 9 }}
+              label={{ value: 'กำไร/ขาดทุน (USD)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fontSize: '10px', fill: '#9CA3AF' } }}
+              className="sm:text-xs"
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend 
               wrapperStyle={{ 
-                color: '#F6E05E', 
+                color: '#F3F4F6', 
+                paddingTop: '10px',
                 fontWeight: '600',
-                fontSize: '14px',
+                fontSize: '11px',
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
               }}
               iconType="rect"
@@ -210,9 +212,9 @@ export default function PnLLineChart({ trades }: PnLLineChartProps) {
               type="monotone"
               dataKey="cumulativePnL"
               stroke="#F6E05E"
-              strokeWidth={3}
-              dot={{ fill: '#F6E05E', strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6, stroke: '#F6E05E', strokeWidth: 2, fill: '#1F2937' }}
+              strokeWidth={2}
+              dot={{ fill: '#F6E05E', strokeWidth: 1, r: 2 }}
+              activeDot={{ r: 4, stroke: '#F6E05E', strokeWidth: 2, fill: '#1F2937' }}
               name="กำไรขาดทุนสะสม"
             />
             
@@ -221,36 +223,36 @@ export default function PnLLineChart({ trades }: PnLLineChartProps) {
               type="monotone"
               dataKey="tradePnL"
               stroke="#60A5FA"
-              strokeWidth={2}
-              dot={{ fill: '#60A5FA', strokeWidth: 1, r: 3 }}
-              activeDot={{ r: 5, stroke: '#60A5FA', strokeWidth: 2, fill: '#1F2937' }}
+              strokeWidth={1.5}
+              dot={{ fill: '#60A5FA', strokeWidth: 1, r: 1.5 }}
+              activeDot={{ r: 3, stroke: '#60A5FA', strokeWidth: 2, fill: '#1F2937' }}
               name="กำไรขาดทุนแต่ละครั้ง"
-              strokeDasharray="5 5"
+              strokeDasharray="3 3"
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
       {/* คำอธิบายกราฟ */}
-      <div className="mt-4 p-4 bg-gray-900 rounded-lg">
-        <h3 className="text-lg font-semibold text-white mb-2">การอ่านกราฟ</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+      <div className="mt-4 p-3 sm:p-4 bg-gray-900 rounded-lg">
+        <h3 className="text-base sm:text-lg font-semibold text-white mb-3">การอ่านกราฟ</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs sm:text-sm text-gray-300">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-1 bg-yellow-400 rounded"></div>
-              <span><strong className="text-yellow-400">เส้นทึบ:</strong> กำไรขาดทุนสะสม (Cumulative P&L)</span>
+              <div className="w-4 h-0.5 bg-yellow-400 rounded"></div>
+              <span><strong className="text-yellow-400">เส้นทึบ:</strong> กำไรขาดทุนสะสม</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-1 bg-blue-400 rounded" style={{backgroundImage: 'repeating-linear-gradient(to right, #60A5FA 0, #60A5FA 3px, transparent 3px, transparent 6px)'}}></div>
-              <span><strong className="text-blue-400">เส้นประ:</strong> กำไรขาดทุนแต่ละครั้ง (Trade P&L)</span>
+              <div className="w-4 h-0.5 bg-blue-400 rounded opacity-60" style={{backgroundImage: 'repeating-linear-gradient(to right, #60A5FA 0, #60A5FA 2px, transparent 2px, transparent 4px)'}}></div>
+              <span><strong className="text-blue-400">เส้นประ:</strong> กำไรขาดทุนแต่ละครั้ง</span>
             </div>
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-1 bg-gray-500 rounded" style={{backgroundImage: 'repeating-linear-gradient(to right, #6B7280 0, #6B7280 1px, transparent 1px, transparent 3px)'}}></div>
-              <span><strong className="text-gray-400">เส้นอ้างอิง:</strong> แนวเส้นศูนย์ (Break Even)</span>
+              <div className="w-4 h-0.5 bg-gray-500 rounded opacity-60" style={{backgroundImage: 'repeating-linear-gradient(to right, #6B7280 0, #6B7280 1px, transparent 1px, transparent 2px)'}}></div>
+              <span><strong className="text-gray-400">เส้นอ้างอิง:</strong> แนวเส้นศูนย์</span>
             </div>
-            <div>
+            <div className="text-xs">
               <span><strong className="text-green-400">เหนือเส้นศูนย์:</strong> กำไร | <strong className="text-red-400">ใต้เส้นศูนย์:</strong> ขาดทุน</span>
             </div>
           </div>

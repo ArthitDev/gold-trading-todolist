@@ -118,27 +118,27 @@ export default function APIKeySettings() {
   };
 
   return (
-    <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
+    <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🔑</span>
-          <h2 className="text-2xl font-bold text-white">การตั้งค่า Gemini API Key</h2>
+          <span className="text-xl sm:text-2xl">🔑</span>
+          <h2 className="text-xl sm:text-2xl font-bold text-white">การตั้งค่า Gemini API Key</h2>
         </div>
         <button
           onClick={() => setIsVisible(!isVisible)}
-          className="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-white hover:bg-gray-600 transition-colors"
+          className="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-white hover:bg-gray-600 transition-colors w-full sm:w-auto"
         >
           {isVisible ? 'ซ่อน' : 'แสดง'}
         </button>
       </div>
 
       {isVisible && (
-        <div className="space-y-4">
+        <div className="space-y-4 sm:space-y-6">
           {/* คำอธิบาย */}
           <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-blue-400 mb-2">วิธีการใช้งาน</h3>
-            <ol className="text-sm text-gray-300 space-y-1 list-decimal list-inside">
-              <li>ไปที่ <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google AI Studio</a></li>
+            <h3 className="text-base sm:text-lg font-semibold text-blue-400 mb-3">วิธีการใช้งาน</h3>
+            <ol className="text-sm text-gray-300 space-y-2 list-decimal list-inside">
+              <li>ไปที่ <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline break-all">Google AI Studio</a></li>
               <li>สร้าง API Key ใหม่หรือใช้ที่มีอยู่</li>
               <li>คัดลอก API Key มาใส่ในช่องด้านล่าง</li>
               <li>กดบันทึกและทดสอบการเชื่อมต่อ</li>
@@ -148,7 +148,7 @@ export default function APIKeySettings() {
 
           {/* สถานะปัจจุบัน */}
           <div className="bg-gray-700 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <span className="text-sm font-medium text-gray-300">สถานะ API Key:</span>
               <span className={`text-sm font-bold ${apiKey ? 'text-green-400' : 'text-red-400'}`}>
                 {apiKey ? '✅ ตั้งค่าแล้ว' : '❌ ยังไม่ได้ตั้งค่า'}
@@ -157,8 +157,8 @@ export default function APIKeySettings() {
             
             {/* สถานะการเชื่อมต่อ */}
             {apiKey && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
+              <div className="space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-sm text-gray-400">สถานะการเชื่อมต่อ:</span>
                   <span className={`text-sm font-bold ${getStatusColor()}`}>
                     {getStatusIcon()} {connectionStatus.message}
@@ -170,21 +170,19 @@ export default function APIKeySettings() {
                     ทดสอบล่าสุด: {connectionStatus.lastTested}
                   </div>
                 )}
-              </div>
-            )}
-
-            {apiKey && (
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-sm text-gray-400">Key:</span>
-                <code className="text-sm bg-gray-800 px-2 py-1 rounded text-yellow-400 font-mono">
-                  {showKey ? apiKey : maskApiKey(apiKey)}
-                </code>
-                <button
-                  onClick={() => setShowKey(!showKey)}
-                  className="text-xs text-blue-400 hover:underline"
-                >
-                  {showKey ? 'ซ่อน' : 'แสดง'}
-                </button>
+                
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                  <span className="text-sm text-gray-400 flex-shrink-0">Key:</span>
+                  <code className="text-sm bg-gray-800 px-2 py-1 rounded text-yellow-400 font-mono break-all">
+                    {showKey ? apiKey : maskApiKey(apiKey)}
+                  </code>
+                  <button
+                    onClick={() => setShowKey(!showKey)}
+                    className="text-xs text-blue-400 hover:underline flex-shrink-0"
+                  >
+                    {showKey ? 'ซ่อน' : 'แสดง'}
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -229,11 +227,11 @@ export default function APIKeySettings() {
           </div>
 
           {/* ปุ่มจัดการ */}
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleSave}
               disabled={!inputValue.trim()}
-              className="flex-1 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:bg-gray-600 disabled:cursor-not-allowed"
+              className="w-full sm:flex-1 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:bg-gray-600 disabled:cursor-not-allowed"
             >
               {isSaved ? '✅ บันทึกแล้ว' : 'บันทึก API Key'}
             </button>
@@ -243,25 +241,28 @@ export default function APIKeySettings() {
                 <button
                   onClick={testConnection}
                   disabled={isTestingConnection}
-                  className="rounded-lg bg-green-600 px-4 py-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="w-full sm:w-auto rounded-lg bg-green-600 px-4 py-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isTestingConnection ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      ทดสอบ...
+                      <span className="hidden sm:inline">ทดสอบ...</span>
+                      <span className="sm:hidden">ทดสอบ</span>
                     </>
                   ) : (
                     <>
-                      🔧 ทดสอบการเชื่อมต่อ
+                      <span className="hidden sm:inline">🔧 ทดสอบการเชื่อมต่อ</span>
+                      <span className="sm:hidden">🔧 ทดสอบ</span>
                     </>
                   )}
                 </button>
                 
                 <button
                   onClick={handleClear}
-                  className="rounded-lg bg-red-600 px-4 py-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75"
+                  className="w-full sm:w-auto rounded-lg bg-red-600 px-4 py-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75"
                 >
-                  ลบ Key
+                  <span className="hidden sm:inline">ลบ Key</span>
+                  <span className="sm:hidden">ลบ</span>
                 </button>
               </>
             )}
@@ -269,11 +270,11 @@ export default function APIKeySettings() {
 
           {/* คำเตือนความปลอดภัย */}
           <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <span className="text-yellow-400">⚠️</span>
               <h4 className="text-sm font-semibold text-yellow-400">ข้อควรระวัง</h4>
             </div>
-            <ul className="text-xs text-gray-300 space-y-1 list-disc list-inside">
+            <ul className="text-xs sm:text-sm text-gray-300 space-y-1.5 list-disc list-inside">
               <li>ไม่ควรแชร์ API Key กับผู้อื่น</li>
               <li>ตรวจสอบการใช้งาน API ที่ Google AI Studio เป็นประจำ</li>
               <li>API Key จะหายไปเมื่อล้างข้อมูลเบราว์เซอร์</li>

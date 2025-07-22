@@ -50,10 +50,10 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-xl bg-gray-800 p-6 shadow-lg">
-      <h2 className="text-2xl font-bold text-white">เพิ่มรายการเทรดใหม่</h2>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+      <h2 className="text-xl sm:text-2xl font-bold text-white">เพิ่มรายการเทรดใหม่</h2>
       
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col">
           <label className="mb-2 text-sm font-medium text-gray-300">วันที่</label>
           <input
@@ -72,7 +72,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             name="type"
             value={trade.type}
             onChange={handleChange}
-            className="rounded-lg border border-gray-600 bg-gray-700 p-3 pr-8 text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none bg-no-repeat bg-right bg-[length:16px_16px] bg-[position:right_12px_center]"
+            className="rounded-lg border border-gray-600 bg-gray-700 p-3 pr-8 text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none bg-no-repeat bg-right bg-[length:16px_16px]]"
             style={{
               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`
             }}
@@ -112,7 +112,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
           />
         </div>
         
-        <div className="flex flex-col">
+        <div className="flex flex-col sm:col-span-2">
           <label className="mb-2 text-sm font-medium text-gray-300">ขนาด Lot (Lot Size)</label>
           <input
             type="number"
@@ -130,7 +130,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
           </div>
         </div>
         
-        <div className="flex flex-col md:col-span-2">
+        <div className="flex flex-col sm:col-span-2">
           <label className="mb-2 text-sm font-medium text-gray-300">หมายเหตุ (ไม่บังคับ)</label>
           <textarea
             name="note"

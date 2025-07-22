@@ -134,10 +134,10 @@ export default function DetailedStatsCard({ trades }: DetailedStatsCardProps) {
   }
 
   return (
-    <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-      <h2 className="mb-6 text-2xl font-bold text-white">สถิติเชิงลึก</h2>
+    <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+      <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white">สถิติเชิงลึก</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {/* การเทรดพื้นฐาน */}
         <div className="bg-gray-700 rounded-lg p-4">
           <h3 className="text-lg font-semibold text-blue-400 mb-3">การเทรดพื้นฐาน</h3>
@@ -239,8 +239,8 @@ export default function DetailedStatsCard({ trades }: DetailedStatsCardProps) {
 
       {/* Performance Indicators */}
       <div className="mt-6 pt-6 border-t border-gray-700">
-        <h3 className="text-lg font-semibold text-white mb-4">ตัวชี้วัดประสิทธิภาพ</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <h3 className="text-base sm:text-lg font-semibold text-white mb-4">ตัวชี้วัดประสิทธิภาพ</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="text-center">
             <div className={`text-2xl font-bold mb-2 ${getProfitFactorColor(stats.profitFactor)}`}>
               {stats.profitFactor === Infinity ? '∞' : formatNumber(stats.profitFactor, 2)}

@@ -168,27 +168,27 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
   };
 
   return (
-    <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-        <h2 className="text-2xl font-bold text-white mb-4 sm:mb-0 flex items-center gap-2">
+    <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+      <div className="flex flex-col gap-4 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
           🤖 การวิเคราะห์ AI
         </h2>
         
         {/* Analysis Type Selector */}
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {Object.entries(analysisTypes).map(([key, config]) => (
             <button
               key={key}
               onClick={() => setSelectedType(key as AnalysisType)}
-              className={`px-3 py-2 rounded-lg text-sm font-semibold transition duration-300 flex items-center gap-1 ${
+              className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition duration-300 flex flex-col sm:flex-row items-center justify-center gap-1 ${
                 selectedType === key
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
               title={config.description}
             >
-              <span>{config.icon}</span>
-              <span className="hidden sm:inline">{config.label}</span>
+              <span className="text-lg sm:text-base">{config.icon}</span>
+              <span className="text-center leading-tight">{config.label}</span>
             </button>
           ))}
         </div>
@@ -196,33 +196,33 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
 
       {/* Current Selection Info */}
       <div className="mb-6 p-4 bg-gray-700 rounded-lg">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-2xl">{analysisTypes[selectedType].icon}</span>
-          <h3 className="text-lg font-semibold text-white">{analysisTypes[selectedType].label}</h3>
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-xl sm:text-2xl">{analysisTypes[selectedType].icon}</span>
+          <h3 className="text-base sm:text-lg font-semibold text-white">{analysisTypes[selectedType].label}</h3>
         </div>
-        <p className="text-gray-300 text-sm">{analysisTypes[selectedType].description}</p>
+        <p className="text-gray-300 text-sm mb-4">{analysisTypes[selectedType].description}</p>
         
-        <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+          <div className="flex justify-between sm:flex-col">
             <span className="text-gray-400">การเทรดทั้งหมด:</span>
-            <span className="ml-2 font-bold text-blue-400">{trades.length}</span>
+            <span className="font-bold text-blue-400">{trades.length}</span>
           </div>
-          <div>
+          <div className="flex justify-between sm:flex-col">
             <span className="text-gray-400">เงินทุน:</span>
-            <span className="ml-2 font-bold text-yellow-400">{formatCurrency(capital)}</span>
+            <span className="font-bold text-yellow-400">{formatCurrency(capital)}</span>
           </div>
-          <div>
+          <div className="flex justify-between sm:flex-col">
             <span className="text-gray-400">กำไรขาดทุน:</span>
-            <span className={`ml-2 font-bold ${
+            <span className={`font-bold ${
               trades.reduce((sum, trade) => sum + calculateTradePnL(trade), 0) >= 0 
                 ? 'text-green-400' : 'text-red-400'
             }`}>
               {formatPnL(trades.reduce((sum, trade) => sum + calculateTradePnL(trade), 0))}
             </span>
           </div>
-          <div>
+          <div className="flex justify-between sm:flex-col">
             <span className="text-gray-400">อัตราชนะ:</span>
-            <span className="ml-2 font-bold text-purple-400">
+            <span className="font-bold text-purple-400">
               {trades.length > 0 ? 
                 ((trades.filter(trade => calculateTradePnL(trade) > 0).length / trades.length) * 100).toFixed(1) 
                 : 0}%
@@ -247,21 +247,23 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
       {/* Connection Status */}
       {apiKey && (
         <div className="mb-4 p-4 bg-gray-700 rounded-lg">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
             <span className="text-sm font-medium text-gray-300">สถานะการเชื่อมต่อ Gemini API:</span>
             <button
               onClick={testConnection}
               disabled={isTestingConnection}
-              className="px-3 py-1 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-600 transition-colors flex items-center gap-1"
+              className="px-3 py-2 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-600 transition-colors flex items-center justify-center gap-1 w-full sm:w-auto"
             >
               {isTestingConnection ? (
                 <>
                   <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
-                  ทดสอบ...
+                  <span className="hidden sm:inline">ทดสอบ...</span>
+                  <span className="sm:hidden">ทดสอบ</span>
                 </>
               ) : (
                 <>
-                  🔧 ทดสอบการเชื่อมต่อ
+                  <span className="hidden sm:inline">🔧 ทดสอบการเชื่อมต่อ</span>
+                  <span className="sm:hidden">🔧 ทดสอบ</span>
                 </>
               )}
             </button>
@@ -294,7 +296,7 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
         <button
           onClick={handleAnalysis}
           disabled={isLoading || trades.length === 0 || !apiKey || isTestingConnection}
-          className={`px-6 py-3 rounded-lg font-semibold transition duration-300 flex items-center gap-2 mx-auto ${
+          className={`w-full sm:w-auto px-6 py-3 rounded-lg font-semibold transition duration-300 flex items-center justify-center gap-2 ${
             isLoading || isTestingConnection
               ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
               : trades.length === 0 || !apiKey
@@ -307,18 +309,21 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
           {isLoading ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              กำลังวิเคราะห์...
+              <span className="hidden sm:inline">กำลังวิเคราะห์...</span>
+              <span className="sm:hidden">วิเคราะห์...</span>
             </>
           ) : isTestingConnection ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              กำลังทดสอบการเชื่อมต่อ...
+              <span className="hidden sm:inline">กำลังทดสอบการเชื่อมต่อ...</span>
+              <span className="sm:hidden">ทดสอบ...</span>
             </>
           ) : (
             <>
-              🔍 เริ่มวิเคราะห์ด้วย AI
+              <span className="hidden sm:inline">🔍 เริ่มวิเคราะห์ด้วย AI</span>
+              <span className="sm:hidden">🔍 วิเคราะห์ AI</span>
               {connectionStatus.status === 'success' && (
-                <span className="text-xs bg-green-500 px-2 py-1 rounded-full ml-2">พร้อม</span>
+                <span className="text-xs bg-green-500 px-2 py-1 rounded-full">พร้อม</span>
               )}
             </>
           )}
@@ -350,7 +355,7 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
             <span className="text-red-400">❌</span>
             <span className="text-red-300 font-semibold">เกิดข้อผิดพลาด</span>
           </div>
-          <p className="text-red-200 mt-1">{error}</p>
+          <p className="text-red-200 mt-1 text-sm break-words">{error}</p>
         </div>
       )}
 
@@ -359,45 +364,44 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
         <div className="bg-gray-700 rounded-lg overflow-hidden">
           {/* Collapsible Header */}
           <div 
-            className="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-600 transition-colors duration-200"
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 cursor-pointer hover:bg-gray-600 transition-colors duration-200 gap-3"
             onClick={() => setIsAnalysisExpanded(!isAnalysisExpanded)}
           >
-            <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                 {analysisTypes[analysisResult.analysisType as AnalysisType].icon}
-                ผลการวิเคราะห์: {analysisTypes[analysisResult.analysisType as AnalysisType].label}
+                <span className="hidden sm:inline">ผลการวิเคราะห์: </span>
+                {analysisTypes[analysisResult.analysisType as AnalysisType].label}
               </h3>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-400">
-                  {formatTimestamp(analysisResult.timestamp)}
-                </span>
-                {/* Mini Stats when collapsed */}
-                {!isAnalysisExpanded && (
-                  <div className="hidden md:flex items-center gap-3 text-sm">
-                    <span className="bg-blue-600 px-2 py-1 rounded">
-                      {analysisResult.stats?.totalTrades || trades.length} trades
-                    </span>
-                    <span className="bg-yellow-600 px-2 py-1 rounded">
-                      {analysisResult.stats?.winRate?.toFixed(1) || 
-                       (trades.length > 0 ? 
-                        ((trades.filter(trade => (trade.exitPrice - trade.entryPrice) * trade.lotSize > 0).length / trades.length) * 100).toFixed(1) 
-                        : 0)
-                      }% WR
-                    </span>
-                    <span className={`px-2 py-1 rounded ${
-                      (analysisResult.stats?.profitFactor || 0) >= 1.5 ? 'bg-green-600' : 
-                      (analysisResult.stats?.profitFactor || 0) >= 1 ? 'bg-yellow-600' : 'bg-red-600'
-                    }`}>
-                      PF: {analysisResult.stats?.profitFactor === Infinity ? '∞' : 
-                           (analysisResult.stats?.profitFactor?.toFixed(2) || '0.00')}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <span className="text-sm text-gray-400">
+                {formatTimestamp(analysisResult.timestamp)}
+              </span>
+              {/* Mini Stats when collapsed */}
+              {!isAnalysisExpanded && (
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="bg-blue-600 px-2 py-1 rounded">
+                    {analysisResult.stats?.totalTrades || trades.length} trades
+                  </span>
+                  <span className="bg-yellow-600 px-2 py-1 rounded">
+                    {analysisResult.stats?.winRate?.toFixed(1) || 
+                     (trades.length > 0 ? 
+                      ((trades.filter(trade => (trade.exitPrice - trade.entryPrice) * trade.lotSize > 0).length / trades.length) * 100).toFixed(1) 
+                      : 0)
+                    }% WR
+                  </span>
+                  <span className={`px-2 py-1 rounded ${
+                    (analysisResult.stats?.profitFactor || 0) >= 1.5 ? 'bg-green-600' : 
+                    (analysisResult.stats?.profitFactor || 0) >= 1 ? 'bg-yellow-600' : 'bg-red-600'
+                  }`}>
+                    PF: {analysisResult.stats?.profitFactor === Infinity ? '∞' : 
+                         (analysisResult.stats?.profitFactor?.toFixed(2) || '0.00')}
+                  </span>
+                </div>
+              )}
             </div>
             
             {/* Expand/Collapse Icon */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center sm:justify-end gap-3">
               <span className="text-sm text-gray-400 hidden sm:inline">
                 {isAnalysisExpanded ? 'ซ่อน' : 'แสดง'}
               </span>
@@ -420,12 +424,12 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
               ? 'max-h-none opacity-100' 
               : 'max-h-0 opacity-0 overflow-hidden'
           }`}>
-            <div className="px-6 pb-6">
+            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
               {/* Summary Stats - Always visible when expanded */}
-              <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm bg-gray-800 rounded-lg p-4">
+              <div className="mb-6 grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm bg-gray-800 rounded-lg p-4">
                 <div className="text-center">
                   <div className="text-lg font-bold text-blue-400">{analysisResult.stats?.totalTrades || trades.length}</div>
-                  <div className="text-gray-400">การเทรดทั้งหมด</div>
+                  <div className="text-gray-400 text-xs">การเทรดทั้งหมด</div>
                 </div>
                 <div className="text-center">
                   <div className="text-lg font-bold text-yellow-400">
@@ -435,7 +439,7 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
                       : 0)
                     }%
                   </div>
-                  <div className="text-gray-400">อัตราชนะ</div>
+                  <div className="text-gray-400 text-xs">อัตราชนะ</div>
                 </div>
                 <div className="text-center">
                   <div className={`text-lg font-bold ${
@@ -446,76 +450,40 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
                      (analysisResult.stats?.profitFactor?.toFixed(2) || '0.00')
                     }
                   </div>
-                  <div className="text-gray-400">Profit Factor</div>
+                  <div className="text-gray-400 text-xs">Profit Factor</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-purple-400">
-                    ${(analysisResult.stats?.maxDrawdown || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <div className={`text-lg font-bold ${
+                    (analysisResult.stats?.totalPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {formatPnL(analysisResult.stats?.totalPnl || 0)}
                   </div>
-                  <div className="text-gray-400">Max Drawdown</div>
+                  <div className="text-gray-400 text-xs">กำไรขาดทุนรวม</div>
                 </div>
               </div>
 
-              {/* Markdown Content */}
-              <div className="prose prose-invert prose-blue max-w-none text-gray-200">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    h1: ({ children }) => <h1 className="text-2xl font-bold text-yellow-400 mb-4">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-xl font-bold text-blue-400 mb-3 mt-6">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-lg font-bold text-green-400 mb-2 mt-4">{children}</h3>,
-                    p: ({ children }) => <p className="text-gray-300 mb-3 leading-relaxed">{children}</p>,
-                    ul: ({ children }) => <ul className="list-disc list-inside mb-4 text-gray-300 space-y-1">{children}</ul>,
-                    ol: ({ children }) => <ol className="list-decimal list-inside mb-4 text-gray-300 space-y-1">{children}</ol>,
-                    li: ({ children }) => <li className="ml-2">{children}</li>,
-                    strong: ({ children }) => <strong className="text-yellow-300 font-bold">{children}</strong>,
-                    em: ({ children }) => <em className="text-blue-300 italic">{children}</em>,
-                    code: ({ children }) => <code className="bg-gray-800 px-2 py-1 rounded text-green-300">{children}</code>,
-                    blockquote: ({ children }) => (
-                      <blockquote className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-800 rounded-r-lg mb-4">
-                        {children}
-                      </blockquote>
-                    ),
-                    table: ({ children }) => (
-                      <div className="overflow-x-auto mb-4">
-                        <table className="min-w-full border-collapse border border-gray-600">
-                          {children}
-                        </table>
-                      </div>
-                    ),
-                    th: ({ children }) => (
-                      <th className="border border-gray-600 px-4 py-2 bg-gray-800 text-yellow-400 font-bold">
-                        {children}
-                      </th>
-                    ),
-                    td: ({ children }) => (
-                      <td className="border border-gray-600 px-4 py-2 text-gray-300">
-                        {children}
-                      </td>
-                    ),
-                  }}
-                >
-                  {analysisResult.analysis}
-                </ReactMarkdown>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mt-6 pt-4 border-t border-gray-600 flex flex-wrap gap-2">
-                <button
-                  onClick={handleAnalysis}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 text-sm"
-                >
-                  🔄 วิเคราะห์ใหม่
-                </button>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(analysisResult.analysis);
-                    alert('คัดลอกการวิเคราะห์แล้ว!');
-                  }}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition duration-300 text-sm"
-                >
-                  📋 คัดลอก
-                </button>
+              {/* Analysis Content */}
+              <div className="prose prose-invert max-w-none">
+                <div className="bg-gray-800 rounded-lg p-4 overflow-auto text-gray-100 text-sm sm:text-base leading-relaxed">
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      h1: ({children}) => <h1 className="text-xl sm:text-2xl font-bold text-white mb-4">{children}</h1>,
+                      h2: ({children}) => <h2 className="text-lg sm:text-xl font-bold text-blue-400 mb-3 mt-6">{children}</h2>,
+                      h3: ({children}) => <h3 className="text-base sm:text-lg font-semibold text-green-400 mb-2 mt-4">{children}</h3>,
+                      p: ({children}) => <p className="mb-3 text-gray-200">{children}</p>,
+                      ul: ({children}) => <ul className="list-disc list-inside mb-3 space-y-1 text-gray-200">{children}</ul>,
+                      ol: ({children}) => <ol className="list-decimal list-inside mb-3 space-y-1 text-gray-200">{children}</ol>,
+                      strong: ({children}) => <strong className="font-bold text-yellow-400">{children}</strong>,
+                      code: ({children}) => <code className="bg-gray-700 px-2 py-1 rounded text-yellow-300 text-sm">{children}</code>,
+                      table: ({children}) => <div className="overflow-x-auto"><table className="min-w-full table-auto text-left border-collapse border border-gray-600 mb-4">{children}</table></div>,
+                      th: ({children}) => <th className="border border-gray-600 px-3 py-2 bg-gray-700 text-gray-200 font-semibold text-sm">{children}</th>,
+                      td: ({children}) => <td className="border border-gray-600 px-3 py-2 text-gray-300 text-sm">{children}</td>
+                    }}
+                  >
+                    {analysisResult.analysis}
+                  </ReactMarkdown>
+                </div>
               </div>
             </div>
           </div>

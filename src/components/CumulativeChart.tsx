@@ -27,21 +27,37 @@ export default function CumulativeChart({ trades }) {
   }, [trades]);
 
   return (
-    <div className="rounded-xl bg-gray-800 p-6 shadow-lg w-full">
-      <h2 className="mb-4 text-2xl font-bold text-white">แนวโน้มกำไร/ขาดทุนสะสม</h2>
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg w-full">
+      <h2 className="mb-4 text-lg sm:text-2xl font-bold text-white">แนวโน้มกำไร/ขาดทุนสะสม</h2>
+      <ResponsiveContainer width="100%" height={250} className="sm:!h-[300px]">
         <BarChart data={data} margin={{
           top: 5,
-          right: 30,
-          left: 20,
+          right: 15,
+          left: 10,
           bottom: 5,
         }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#4A5568" />
-          <XAxis dataKey="date" stroke="#CBD5E0" />
-          <YAxis stroke="#CBD5E0" />
+          <XAxis 
+            dataKey="date" 
+            stroke="#CBD5E0" 
+            fontSize={12}
+            tick={{ fontSize: 10 }}
+            className="sm:text-sm"
+          />
+          <YAxis 
+            stroke="#CBD5E0" 
+            fontSize={12}
+            tick={{ fontSize: 10 }}
+            className="sm:text-sm"
+          />
           <Tooltip
             cursor={{ fill: 'rgba(255,255,255,0.1)' }}
-            contentStyle={{ backgroundColor: '#2D3748', border: 'none', borderRadius: '8px' }}
+            contentStyle={{ 
+              backgroundColor: '#2D3748', 
+              border: 'none', 
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}
             labelStyle={{ color: '#E2E8F0' }}
             itemStyle={{ color: '#E2E8F0' }}
           />
@@ -50,7 +66,7 @@ export default function CumulativeChart({ trades }) {
               color: '#F6E05E', 
               paddingTop: '10px',
               fontWeight: '600',
-              fontSize: '14px',
+              fontSize: '12px',
               textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
             }}
             iconType="rect"

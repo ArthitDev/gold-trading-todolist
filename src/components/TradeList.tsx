@@ -22,19 +22,21 @@ export default function TradeList({ trades, onDeleteTrade }: TradeListProps) {
 
   if (trades.length === 0) {
     return (
-      <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-        <h2 className="mb-6 text-2xl font-bold text-white">ประวัติการเทรด</h2>
-        <div className="flex items-center justify-center py-12">
-          <p className="text-gray-400 text-lg">ยังไม่มีข้อมูลการเทรด</p>
+      <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+        <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white">ประวัติการเทรด</h2>
+        <div className="flex items-center justify-center py-8 sm:py-12">
+          <p className="text-gray-400 text-base sm:text-lg">ยังไม่มีข้อมูลการเทรด</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
-      <h2 className="mb-6 text-2xl font-bold text-white">ประวัติการเทรด</h2>
-      <div className="overflow-x-auto rounded-lg border border-gray-700">
+    <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
+      <h2 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white">ประวัติการเทรด</h2>
+      
+      {/* Desktop Table View */}
+      <div className="hidden lg:block overflow-x-auto rounded-lg border border-gray-700">
         <table className="min-w-full table-auto text-left text-white">
           <thead className="bg-gray-700">
             <tr>
@@ -110,9 +112,85 @@ export default function TradeList({ trades, onDeleteTrade }: TradeListProps) {
           </tbody>
         </table>
       </div>
+
+      {/* Mobile/Tablet Card View */}
+      <div className="lg:hidden space-y-4">
+        {sortedTrades.map((trade) => {
+          const pnl = calculateTradePnL(trade);
+          return (
+            <div key={trade.id} className="bg-gray-700 rounded-lg p-4 space-y-3">
+              {/* Header */}
+              <div className="flex justify-between items-start">
+                <div className="flex flex-col">
+                  <span className="text-white font-semibold">
+                    {new Date(trade.date).toLocaleDateString('th-TH', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </span>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full mt-1 w-fit ${
+                    trade.type === 'buy' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {trade.type === 'buy' ? 'ซื้อ' : 'ขาย'}
+                  </span>
+                </div>
+                <button
+                  onClick={() => handleDelete(trade.id!)}
+                  className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75"
+                >
+                  ลบ
+                </button>
+              </div>
+
+              {/* Trade Details Grid */}
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <span className="text-gray-400 block">ราคาเข้า</span>
+                  <span className="text-white font-mono">${formatAmount(trade.entryPrice)}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block">ราคาออก</span>
+                  <span className="text-white font-mono">${formatAmount(trade.exitPrice)}</span>
+                </div>
+                <div>
+                  <span className="text-gray-400 block">ขนาด Lot</span>
+                  <div>
+                    <span className="text-white font-mono">{formatAmount(trade.lotSize)}</span>
+                    <span className="text-xs text-gray-500 block">
+                      ({calculateTotalOunces(trade.lotSize).toFixed(0)} oz)
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <span className="text-gray-400 block">กำไร/ขาดทุน</span>
+                  <div>
+                    <span className={`font-bold ${pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {formatPnL(pnl)}
+                    </span>
+                    <span className="text-xs text-gray-500 block">
+                      (${formatAmount(Math.abs(calculatePnLPerOunce(trade)))}/oz)
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Note */}
+              {trade.note && (
+                <div className="pt-2 border-t border-gray-600">
+                  <span className="text-gray-400 text-sm block mb-1">หมายเหตุ</span>
+                  <span className="text-gray-300 text-sm">{trade.note}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
       
       {/* สรุปสถิติในตาราง */}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-gray-700 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-400">การเทรดทั้งหมด</p>
           <p className="text-xl font-bold text-blue-400">{trades.length}</p>
