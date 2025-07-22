@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Trade } from '@/hooks/useLocalStorage';
@@ -23,7 +23,7 @@ interface AnalysisResult {
 type AnalysisType = 'performance' | 'risk' | 'improvement' | 'strategy';
 
 export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
-  const [apiKey] = useLocalStorage<string>('gemini-api-key', '');
+  const [apiKey, setApiKey] = useLocalStorage<string>('gemini-api-key', '');
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [selectedType, setSelectedType] = useState<AnalysisType>('performance');
@@ -34,6 +34,55 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
     status: 'unknown' | 'testing' | 'success' | 'error';
     message: string;
   }>({ status: 'unknown', message: '' });
+
+  // Listen for API key changes in localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedApiKey = localStorage.getItem('gemini-api-key');
+      const newApiKey = storedApiKey ? JSON.parse(storedApiKey) : '';
+      
+      if (newApiKey !== apiKey) {
+        setApiKey(newApiKey);
+        
+        if (newApiKey) {
+          // Reset connection status when API key changes
+          setConnectionStatus({ status: 'unknown', message: 'API Key ใหม่ - กรุณาทดสอบการเชื่อมต่อ' });
+        } else {
+          // Clear connection status when API key is removed
+          setConnectionStatus({ status: 'unknown', message: '' });
+        }
+      }
+    };
+
+    // Listen for storage events (when other components update localStorage)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also listen for custom event that we'll dispatch from APIKeySettings
+    window.addEventListener('apikey-updated', handleStorageChange as EventListener);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('apikey-updated', handleStorageChange as EventListener);
+    };
+  }, [apiKey, setApiKey]);
+
+  // Auto test connection when API key changes and is valid
+  useEffect(() => {
+    if (apiKey && apiKey.trim() && connectionStatus.status === 'unknown' && 
+        connectionStatus.message.includes('API Key ใหม่') && 
+        !connectionStatus.message.includes('กำลังเตรียมทดสอบ')) {
+      
+      // Show preparing message
+      setConnectionStatus({ status: 'unknown', message: 'API Key ใหม่ - กำลังเตรียมทดสอบการเชื่อมต่อ...' });
+      
+      // Auto test connection after a short delay
+      const timer = setTimeout(() => {
+        testConnection();
+      }, 1500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [apiKey, connectionStatus]);
 
   const analysisTypes = {
     performance: {
@@ -273,12 +322,14 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
             connectionStatus.status === 'success' ? 'text-green-400' :
             connectionStatus.status === 'error' ? 'text-red-400' :
             connectionStatus.status === 'testing' ? 'text-yellow-400' :
+            connectionStatus.message.includes('API Key ใหม่') ? 'text-blue-400' :
             'text-gray-400'
           }`}>
             {connectionStatus.status === 'success' && '✅'}
             {connectionStatus.status === 'error' && '❌'}
             {connectionStatus.status === 'testing' && '🔄'}
-            {connectionStatus.status === 'unknown' && '❓'}
+            {connectionStatus.status === 'unknown' && connectionStatus.message.includes('API Key ใหม่') && '🆕'}
+            {connectionStatus.status === 'unknown' && !connectionStatus.message.includes('API Key ใหม่') && '❓'}
             {' '}
             {connectionStatus.message || 'ยังไม่ได้ทดสอบการเชื่อมต่อ'}
           </div>
@@ -337,7 +388,7 @@ export default function AIAnalysis({ trades, capital }: AIAnalysisProps) {
         
         {apiKey && connectionStatus.status === 'unknown' && (
           <p className="mt-2 text-sm text-yellow-400">
-            💡 แนะนำให้ทดสอบการเชื่อมต่อก่อนเริ่มวิเคราะห์
+            💡 {connectionStatus.message || 'แนะนำให้ทดสอบการเชื่อมต่อก่อนเริ่มวิเคราะห์'}
           </p>
         )}
         

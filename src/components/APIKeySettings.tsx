@@ -76,6 +76,10 @@ export default function APIKeySettings() {
     if (inputValue.trim()) {
       setApiKey(inputValue.trim());
       setIsSaved(true);
+      
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('apikey-updated'));
+      
       // Auto test connection after saving
       setTimeout(async () => {
         setIsSaved(false);
@@ -90,6 +94,10 @@ export default function APIKeySettings() {
     setApiKey('');
     setConnectionStatus({ status: 'unknown', message: '' });
     setIsSaved(true);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('apikey-updated'));
+    
     setTimeout(() => setIsSaved(false), 2000);
   };
 
