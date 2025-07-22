@@ -1,14 +1,5 @@
 {
-  "version": 2,
   "name": "gold-trading-todolist",
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "regions": ["sin1"],
   "framework": "nextjs"
 } 
