@@ -123,7 +123,7 @@ export default function DetailedStatsCard({ trades }: DetailedStatsCardProps) {
       <div className="rounded-xl bg-gray-800 p-6 shadow-lg">
         <h2 className="mb-6 text-2xl font-bold text-white">สถิติเชิงลึก</h2>
         <div className="text-center">
-          <div className="text-6xl mb-4">📈</div>
+          <div className="text-4xl mb-4">📈</div>
           <p className="text-gray-400 text-lg">ยังไม่มีข้อมูลการเทรด</p>
           <p className="text-gray-500 text-sm mt-2">
             เพิ่มการเทรดเพื่อดูข้อมูลสถิติเชิงลึก

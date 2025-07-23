@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Trade } from '@/hooks/useLocalStorage';
 
 interface TradeFormProps {
@@ -16,6 +17,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
     type: 'buy' as 'buy' | 'sell',
     note: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -25,28 +27,53 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const tradeData: Omit<Trade, 'id' | 'createdAt'> = {
-      date: trade.date,
-      entryPrice: parseFloat(trade.entryPrice),
-      exitPrice: parseFloat(trade.exitPrice),
-      lotSize: parseFloat(trade.lotSize),
-      type: trade.type,
-      note: trade.note || undefined,
-    };
-    
-    onAddTrade(tradeData);
-    
-    setTrade({
-      date: '',
-      entryPrice: '',
-      exitPrice: '',
-      lotSize: '',
-      type: 'buy',
-      note: '',
-    });
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      const tradeData: Omit<Trade, 'id' | 'createdAt'> = {
+        date: trade.date,
+        entryPrice: parseFloat(trade.entryPrice),
+        exitPrice: parseFloat(trade.exitPrice),
+        lotSize: parseFloat(trade.lotSize),
+        type: trade.type,
+        note: trade.note || undefined,
+      };
+
+      // Calculate P&L for display
+      const pnl = (tradeData.exitPrice - tradeData.entryPrice) * tradeData.lotSize * 100;
+      const pnlText = pnl >= 0 ? `+$${pnl.toFixed(2)}` : `-$${Math.abs(pnl).toFixed(2)}`;
+      
+      onAddTrade(tradeData);
+      
+      // Show success toast with trade details
+      toast.success(
+        `เพิ่มการเทรดสำเร็จ!\n${tradeData.type === 'buy' ? 'ซื้อ' : 'ขาย'} ${tradeData.lotSize} lot • P&L: ${pnlText}`,
+        {
+          duration: 5000,
+          icon: '✅',
+        }
+      );
+      
+      // Reset form
+      setTrade({
+        date: '',
+        entryPrice: '',
+        exitPrice: '',
+        lotSize: '',
+        type: 'buy',
+        note: '',
+      });
+    } catch (error) {
+      toast.error('เกิดข้อผิดพลาดในการเพิ่มการเทรด กรุณาลองใหม่อีกครั้ง', {
+        icon: '❌',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -63,6 +90,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             onChange={handleChange}
             className="rounded-lg border border-gray-600 bg-gray-700 p-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
+            disabled={isSubmitting}
           />
         </div>
         
@@ -76,6 +104,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             style={{
               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`
             }}
+            disabled={isSubmitting}
           >
             <option value="buy">ซื้อ (Buy)</option>
             <option value="sell">ขาย (Sell)</option>
@@ -94,6 +123,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             min="0"
             className="rounded-lg border border-gray-600 bg-gray-700 p-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
+            disabled={isSubmitting}
           />
         </div>
         
@@ -109,6 +139,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             min="0"
             className="rounded-lg border border-gray-600 bg-gray-700 p-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
+            disabled={isSubmitting}
           />
         </div>
         
@@ -124,6 +155,7 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             min="0"
             className="rounded-lg border border-gray-600 bg-gray-700 p-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required
+            disabled={isSubmitting}
           />
           <div className="mt-1 text-xs text-gray-400">
             💡 1 lot = 100 ออนซ์ทองคำ | {trade.lotSize ? `${(parseFloat(trade.lotSize) * 100).toFixed(0)} ออนซ์` : '0 ออนซ์'}
@@ -139,15 +171,24 @@ export default function TradeForm({ onAddTrade }: TradeFormProps) {
             onChange={handleChange}
             rows={3}
             className="rounded-lg border border-gray-600 bg-gray-700 p-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+            disabled={isSubmitting}
           />
         </div>
       </div>
       
       <button 
         type="submit" 
-        className="rounded-lg bg-blue-600 p-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75"
+        disabled={isSubmitting}
+        className="rounded-lg bg-blue-600 p-3 font-semibold text-white shadow-md transition duration-300 ease-in-out hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        เพิ่มรายการเทรด
+        {isSubmitting ? (
+          <>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            กำลังเพิ่มข้อมูล...
+          </>
+        ) : (
+          'เพิ่มรายการเทรด'
+        )}
       </button>
     </form>
   );

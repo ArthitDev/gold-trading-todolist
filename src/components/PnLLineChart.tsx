@@ -112,11 +112,14 @@ export default function PnLLineChart({ trades }: PnLLineChartProps) {
   if (trades.length === 0) {
     return (
       <div className="rounded-xl bg-gray-800 p-4 sm:p-6 shadow-lg">
-        <h2 className="mb-4 text-lg sm:text-2xl font-bold text-white">แนวโน้มกำไร/ขาดทุนต่อเนื่อง</h2>
-        <div className="flex items-center justify-center h-64 text-gray-400">
-          <p className="text-center">
-            <span className="text-4xl block mb-2">📈</span>
-            ยังไม่มีข้อมูลการเทรดสำหรับแสดงกราฟ
+        <h2 className="mb-4 text-lg sm:text-2xl font-bold text-white">
+          แนวโน้มกำไร/ขาดทุนต่อเนื่อง
+        </h2>
+        <div className="text-center">
+          <div className="text-4xl mb-4">📈</div>
+          <p className="text-gray-400 text-lg">ยังไม่มีข้อมูลการเทรด</p>
+          <p className="text-gray-500 text-sm mt-2">
+            เพิ่มการเทรดเพื่อดูข้อมูลแนวโน้มกำไร/ขาดทุนต่อเนื่อง
           </p>
         </div>
       </div>
